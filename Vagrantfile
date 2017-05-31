@@ -51,11 +51,6 @@ Vagrant.configure("2") do |config|
     dtr.vm.provision "shell", path: "scripts/install_dtr.sh"
   end
 
-  # Jenkins
-  config.vm.define "jenkins" do |jenkins|
-    jenkins.vm.hostname = "jenkins.vm"
-  end
-
   # Worker nodes
   config.vm.define "node1" do |node1|
     node1.vm.hostname = "node1.vm"
