@@ -30,8 +30,10 @@ Vagrant.configure("2") do |config|
      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 
+  $docker_ee_url = File.read("userdata/docker_ee_url")
+
   # Install Docker Engine on all vms
-  config.vm.provision "shell", path: "scripts/install_docker_engine.sh"
+  config.vm.provision "shell", args: [$docker_ee_url], path: "scripts/install_docker_engine.sh"
 
   # UCP
   config.vm.define "ucp" do |ucp|

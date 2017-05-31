@@ -6,7 +6,7 @@ sudo sh -c "echo '{
 
 # Install Docker EE
 echo "Installing Docker Engine"
-docker_ee_url=$(cat /vagrant/userdata/docker_ee_url)
+docker_ee_url=$1
 
 # Add Docker's official GPG key
 curl -fsSL ${docker_ee_url}/gpg | sudo apt-key add -
