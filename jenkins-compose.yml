@@ -1,0 +1,20 @@
+version: "3"
+services:
+
+  jenkins:
+    image: dtr.vm/admin/jenkins
+    networks:
+      - ucp-hrm
+    volumes:
+      - jenkins:/var/jenkins_home
+    deploy:
+      labels:
+        - com.docker.ucp.mesh.http.80=external_route=http://jenkins.vm,internal_port=8080
+
+networks:
+  ucp-hrm:
+    external:
+      name: ucp-hrm
+
+volumes:
+  jenkins:
