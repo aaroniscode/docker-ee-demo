@@ -12,10 +12,6 @@ Vagrant.configure("2") do |config|
     }
   end
 
-  config.vm.provider "virtualbox" do |v|
-    v.memory = 2048
-  end
-
   # Network configuration
   config.vm.network "private_network", type: "dhcp"
   config.landrush.enabled = true
@@ -25,9 +21,13 @@ Vagrant.configure("2") do |config|
     /lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/, /docker_gwbridge/
   ]
 
-  # This will redirect vm dns queries to landrush dns server
-  config.vm.provider "virtualbox" do |v|
-     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+  config.vm.provider "virtualbox" do |vb|
+    # Give each vm 2GB RAM
+    vb.memory = 2048
+    # Redirect vm dns queries to landrush dns server
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    # Sync the vm clock if skew is > 1 second (1000 ms)
+    vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000]
   end
 
   $docker_ee_url = File.read("userdata/docker_ee_url")
