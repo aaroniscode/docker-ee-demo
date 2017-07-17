@@ -1,19 +1,23 @@
+# Variable Assignment
+ucp_version=$1
+tld=$2
+password=$3
+license=$4
+
+# Vagrant workaround, docker run without a cached image
+# colors output red which looks like an error
+echo "Pulling UCP image"
+docker pull docker/ucp:${ucp_version}
+
+# Install UCP
 echo "Installing UCP"
-docker pull docker/ucp:2.1.4
 docker run --rm --name ucp \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    docker/ucp:2.1.4 install \
+    docker/ucp:${ucp_version} install \
     --host-address `hostname -I | cut -d' ' -f2` \
-    --admin-password password \
-    --san ucp.vm \
-    --license $1
+    --admin-password $password \
+    --controller-port 8443 \
+    --san ucp.${tld} \
+    --license $license
 
-# Get the SWARM manager join token
-docker swarm join-token manager \
-    | awk -F " " '/token/ {print $2}' \
-    > /vagrant/rundata/swarm-join-token-mgr
-
-# Get the SWARM worker join token
-docker swarm join-token worker \
-    | awk -F " " '/token/ {print $2}' \
-    > /vagrant/rundata/swarm-join-token-worker
+/vagrant/scripts/get_swarm_tokens.sh

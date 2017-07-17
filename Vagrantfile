@@ -1,10 +1,29 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-abort "Vagrant plugin landrush required" unless Vagrant.has_plugin?("landrush")
+require 'yaml'
+
+abort "landrush required, TYPE vagrant plugin install landrush" unless Vagrant.has_plugin?("landrush")
+abort "vagrant-triggers required, TYPE vagrant plugin install vagrant-triggers" unless Vagrant.has_plugin?("vagrant-triggers")
+
+unless File.exists? ("#{File.dirname(__FILE__)}/config.yaml")
+  FileUtils.cp("#{File.dirname(__FILE__)}/config.yaml.example", "#{File.dirname(__FILE__)}/config.yaml")
+  abort "Example config.yaml copied. You MUST update with your EE License and URL"
+end
+
+# YAML config section
+yaml_config = YAML::load(File.read("#{File.dirname(__FILE__)}/config.yaml"))
+dtr_version = yaml_config['dtr_version']
+ee_url = yaml_config['ee_url']
+ee_version = yaml_config['ee_version']
+license = yaml_config['license'].to_json
+password = yaml_config['password']
+tld = yaml_config['tld']
+ucp_version = yaml_config['ucp_version']
 
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-16.04"
 
+  # Cache the apt packages for fast builds
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box
     config.cache.synced_folder_opts = {
@@ -15,7 +34,7 @@ Vagrant.configure("2") do |config|
   # Network configuration
   config.vm.network "private_network", type: "dhcp"
   config.landrush.enabled = true
-  config.landrush.tld = 'vm'
+  config.landrush.tld = tld
   config.landrush.guest_redirect_dns = false
   config.landrush.host_interface_excludes = [
     /lo[0-9]*/, /docker[0-9]+/, /tun[0-9]+/, /docker_gwbridge/
@@ -30,41 +49,39 @@ Vagrant.configure("2") do |config|
     vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 1000]
   end
 
-  $docker_ee_url = File.read("userdata/docker_ee_url")
-
   # Install Docker Engine on all vms
-  config.vm.provision "shell", args: [$docker_ee_url], path: "scripts/install_docker_engine.sh"
+  config.vm.provision "shell", args: [ee_url, ee_version], path: "scripts/install_docker_engine.sh"
 
-  # UCP
-  config.vm.define "ucp" do |ucp|
-    ucp.vm.hostname = "ucp.vm"
-    $license =  File.read("userdata/docker_subscription.lic")
-    ucp.vm.provision "shell", args: [$license], path: "scripts/install_ucp.sh"
-  end
+  # Manager (UCP and DTR)
+  config.vm.define "manager1" do |manager1|
+    manager1.vm.hostname = "manager1.#{tld}"
 
-  $token =  File.read("rundata/swarm-join-token-worker")
+    manager1.vm.provision "trigger" do |trigger|
+      trigger.fire do
+        run "vagrant landrush set ucp.#{tld} manager1.#{tld}"
+        run "vagrant landrush set dtr.#{tld} manager1.#{tld}"
+      end
+    end
 
-  # DTR
-  config.vm.define "dtr" do |dtr|
-    dtr.vm.hostname = "dtr.vm"
-    dtr.vm.provision "shell", args: [$token], path: "scripts/join_swarm.sh"
-    dtr.vm.provision "shell", path: "scripts/install_dtr.sh"
+    manager1.vm.provision "shell", args: [tld], path: "scripts/install_haproxy.sh"
+    manager1.vm.provision "shell", args: [ucp_version, tld, password, license], path: "scripts/install_ucp.sh"
+    manager1.vm.provision "shell", args: [dtr_version, tld, password], path: "scripts/install_dtr.sh"
   end
 
   # Worker nodes
-  config.vm.define "node1" do |node1|
-    node1.vm.hostname = "node1.vm"
-    node1.vm.provision "shell", args: [$token], path: "scripts/join_swarm.sh"
+  config.vm.define "worker1" do |worker1|
+    worker1.vm.hostname = "worker1.#{tld}"
+    worker1.vm.provision "shell", args: [tld], path: "scripts/join_swarm.sh"
   end
 
-  config.vm.define "node2" do |node2|
-    node2.vm.hostname = "node2.vm"
-    node2.vm.provision "shell", args: [$token], path: "scripts/join_swarm.sh"
+  config.vm.define "worker2" do |worker2|
+    worker2.vm.hostname = "worker2.#{tld}"
+    worker2.vm.provision "shell", args: [tld], path: "scripts/join_swarm.sh"
   end
 
-  config.vm.define "node3" do |node3|
-    node3.vm.hostname = "node3.vm"
-    node3.vm.provision "shell", args: [$token], path: "scripts/join_swarm.sh"
+  config.vm.define "worker3" do |worker3|
+    worker3.vm.hostname = "worker3.#{tld}"
+    worker3.vm.provision "shell", args: [tld], path: "scripts/join_swarm.sh"
   end
 
 end

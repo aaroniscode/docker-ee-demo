@@ -1,0 +1,20 @@
+---
+# Top level domain for the demo environment
+tld: demo
+
+# UCP Password
+password: password
+
+# Docker versions
+ee_version: stable-17.03
+ucp_version: 2.1.4
+dtr_version: 2.2.6
+
+# URL and License
+ee_url: https://storebits.docker.com/ee/replace_with_your_url
+
+license: {"key_id":"replace_with_your_license"}
+
+# Swarm join token updated automatically
+worker_token: placeholder
+manager_token: placeholder

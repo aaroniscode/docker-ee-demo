@@ -1,3 +1,11 @@
+# Variable Assignment
+tld=$1
+
+# Read the join token
+echo "Reading the join token"
+token=$(grep 'worker_token:' /vagrant/config.yaml \
+  | awk '{ print $2}')
+
 # Join the Swarm cluster
 echo "Joining Swarm"
-docker swarm join --token $1 ucp.vm:2377
+docker swarm join --token $token ucp.${tld}:2377
