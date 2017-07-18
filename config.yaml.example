@@ -15,6 +15,7 @@ ee_url: https://storebits.docker.com/ee/replace_with_your_url
 
 license: {"key_id":"replace_with_your_license"}
 
-# Swarm join token updated automatically
-worker_token: placeholder
+# Tokens updated automatically by scripts
 manager_token: placeholder
+worker_token: placeholder
+ucp_token: placeholder

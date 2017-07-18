@@ -20,4 +20,5 @@ docker run --rm --name ucp \
     --san ucp.${tld} \
     --license $license
 
+# Get the swarm join tokens and save in config.yaml
 /vagrant/scripts/get_swarm_tokens.sh

@@ -63,25 +63,26 @@ Vagrant.configure("2") do |config|
       end
     end
 
-    manager1.vm.provision "shell", args: [tld], path: "scripts/install_haproxy.sh"
+    manager1.vm.provision "shell", path: "scripts/install_haproxy.sh"
     manager1.vm.provision "shell", args: [ucp_version, tld, password, license], path: "scripts/install_ucp.sh"
+    manager1.vm.provision "shell", path: "scripts/ucp_prepopulate.sh"
     manager1.vm.provision "shell", args: [dtr_version, tld, password], path: "scripts/install_dtr.sh"
   end
 
   # Worker nodes
   config.vm.define "worker1" do |worker1|
     worker1.vm.hostname = "worker1.#{tld}"
-    worker1.vm.provision "shell", args: [tld], path: "scripts/join_swarm.sh"
+    worker1.vm.provision "shell", path: "scripts/join_swarm.sh"
   end
 
   config.vm.define "worker2" do |worker2|
     worker2.vm.hostname = "worker2.#{tld}"
-    worker2.vm.provision "shell", args: [tld], path: "scripts/join_swarm.sh"
+    worker2.vm.provision "shell", path: "scripts/join_swarm.sh"
   end
 
   config.vm.define "worker3" do |worker3|
     worker3.vm.hostname = "worker3.#{tld}"
-    worker3.vm.provision "shell", args: [tld], path: "scripts/join_swarm.sh"
+    worker3.vm.provision "shell", path: "scripts/join_swarm.sh"
   end
 
 end
