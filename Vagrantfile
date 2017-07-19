@@ -67,6 +67,7 @@ Vagrant.configure("2") do |config|
     manager1.vm.provision "shell", args: [ucp_version, tld, password, license], path: "scripts/install_ucp.sh"
     manager1.vm.provision "shell", path: "scripts/ucp/prepopulate.sh"
     manager1.vm.provision "shell", path: "scripts/dtr/install.sh"
+    manager1.vm.provision "shell", path: "scripts/dtr/configure.sh"
     manager1.vm.provision "shell", path: "scripts/dtr/prepopulate.sh"
   end
 
