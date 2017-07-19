@@ -1,8 +1,8 @@
 # Variable Assignment
-ucp_version=$1
-tld=$2
-password=$3
-license=$4
+ucp_version=$(grep 'ucp_version:' /vagrant/config.yaml | awk '{print $2}')
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{ print $2}')
+password=$(grep 'password:' /vagrant/config.yaml | awk '{ print $2}')
+license=$(grep 'license:' /vagrant/config.yaml | awk '{ print $2}')
 
 # Vagrant workaround, docker run without a cached image
 # colors output red which looks like an error
