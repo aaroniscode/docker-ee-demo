@@ -1,6 +1,6 @@
 # Variable Assignment
-tld=$(grep 'tld:' /vagrant/config.yaml | awk '{ print $2}')
-password=$(grep 'password:' /vagrant/config.yaml | awk '{ print $2}')
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{print $2}')
+password=$(grep 'password:' /vagrant/config.yaml | awk '{print $2}')
 org_name=$1
 repo_name=$2
 visibility=$3

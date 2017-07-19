@@ -7,7 +7,7 @@ team_name=$2
 curl -sk -H "Authorization: Bearer $token" \
   -H "Content-Type: application/json;charset=UTF-8" \
   -d "{
-      \"name\": \"${org_name}\",
+      \"name\": \"${team_name}\",
       \"type\": \"managed\"
     }", \
   "https://ucp.${tld}/enzi/v0/accounts/${org_name}/teams"

@@ -1,3 +1,7 @@
+# Variable Assignment
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{ print $2}')
+password=$(grep 'password:' /vagrant/config.yaml | awk '{ print $2}')
+
 # Get an auth token and save in config.yaml
 /vagrant/scripts/get_ucp_token.sh
 
@@ -25,3 +29,20 @@ echo "Populating DTR with sample repositories"
 /vagrant/scripts/dtr/create_repo.sh "it" "node" "public" "IT approved Node.js"
 /vagrant/scripts/dtr/create_repo.sh "dev" "node-web-app" "public"
 /vagrant/scripts/dtr/create_repo.sh "prod" "node-web-app" "public"
+
+# Add team access to repositories
+echo "Adding team access to repositories"
+/vagrant/scripts/dtr/add_repo_to_team.sh "dev" "node-web-app" "dev" "read-write"
+
+# Populate repositories with images
+echo "Loading images in DTR"
+docker login dtr.${tld} -u admin -p ${password}
+docker pull nginx
+docker pull node
+docker pull bkauf/node-web-app
+docker tag nginx dtr.${tld}/it/nginx
+docker tag node dtr.${tld}/it/node
+docker tag bkauf/node-web-app dtr.${tld}/dev/node-web-app
+docker push dtr.${tld}/it/nginx
+docker push dtr.${tld}/it/node
+docker push dtr.${tld}/dev/node-web-app

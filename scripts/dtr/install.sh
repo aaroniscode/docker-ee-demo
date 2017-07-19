@@ -1,14 +1,14 @@
 # Variable Assignment
-dtr_version=$1
-tld=$2
-password=$3
+dtr_version=$(grep 'dtr_version:' /vagrant/config.yaml | awk '{print $2}')
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{print $2}')
+password=$(grep 'password:' /vagrant/config.yaml | awk '{print $2}')
 
 # Vagrant workaround, docker run without a cached image
 # colors output red which looks like an error
 echo "Pulling DTR image"
 docker pull docker/dtr:${dtr_version}
 
-#echo "Installing DTR"
+echo "Installing DTR"
 docker run --rm docker/dtr:${dtr_version} install \
     --ucp-node manager1.${tld} \
     --replica-http-port 8080 \
