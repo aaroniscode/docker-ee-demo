@@ -66,6 +66,7 @@ Vagrant.configure("2") do |config|
 
     manager1.vm.provision "shell", path: "scripts/install_haproxy.sh"
     manager1.vm.provision "shell", path: "scripts/ucp/install.sh"
+    manager1.vm.provision "shell", path: "scripts/ucp/configure.sh"
     manager1.vm.provision "shell", path: "scripts/ucp/prepopulate.sh"
     manager1.vm.provision "shell", path: "scripts/dtr/install.sh"
     manager1.vm.provision "shell", path: "scripts/dtr/configure.sh"
