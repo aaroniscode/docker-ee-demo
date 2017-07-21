@@ -7,8 +7,8 @@ password: password
 
 # Docker versions
 ee_version: stable-17.03
-ucp_version: 2.1.4
-dtr_version: 2.2.6
+ucp_version: 2.1.5
+dtr_version: 2.2.7
 
 # URL and License
 ee_url: https://storebits.docker.com/ee/replace_with_your_url
