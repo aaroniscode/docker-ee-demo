@@ -1,5 +1,5 @@
 # Get an auth token and save in config.yaml
-/vagrant/scripts/get_ucp_token.sh
+/vagrant/scripts/ucp/get_auth_token.sh
 
 # Create users
 # 0 = No Access, 1 = View Only, 2 = Restricted Control, 3 = Full Control

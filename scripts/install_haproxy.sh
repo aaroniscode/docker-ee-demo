@@ -1,5 +1,5 @@
 # Variable Assignment
-tld=$(grep 'tld:' /vagrant/config.yaml | awk '{ print $2}')
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{print $2}')
 
 # Install HAProxy
 echo "Installing HAProxy"

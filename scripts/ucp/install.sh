@@ -1,8 +1,8 @@
 # Variable Assignment
 ucp_version=$(grep 'ucp_version:' /vagrant/config.yaml | awk '{print $2}')
-tld=$(grep 'tld:' /vagrant/config.yaml | awk '{ print $2}')
-password=$(grep 'password:' /vagrant/config.yaml | awk '{ print $2}')
-license=$(grep 'license:' /vagrant/config.yaml | awk '{ print $2}')
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{print $2}')
+password=$(grep 'password:' /vagrant/config.yaml | awk '{print $2}')
+license=$(grep 'license:' /vagrant/config.yaml | awk '{print $2}')
 
 # Vagrant workaround, docker run without a cached image
 # colors output red which looks like an error
@@ -19,6 +19,10 @@ docker run --rm --name ucp \
     --controller-port 8443 \
     --san ucp.${tld} \
     --license $license
+
+# Store UCP's self-signed certificate
+echo "Storing UCP's certificate"
+curl -sk https://ucp.${tld}/ca -o /vagrant/certs/ucp.crt
 
 # Get the swarm join tokens and save in config.yaml
 /vagrant/scripts/get_swarm_tokens.sh

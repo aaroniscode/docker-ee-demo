@@ -18,3 +18,7 @@ docker run --rm docker/dtr:${dtr_version} install \
     --ucp-url https://ucp.${tld} \
     --ucp-username admin \
     --ucp-password $password
+
+# Store DTR's self-signed certificate
+echo "Storing DTR's certificate"
+curl -sk https://dtr.${tld}/ca -o /vagrant/certs/dtr.crt

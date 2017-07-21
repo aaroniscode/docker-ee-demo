@@ -1,5 +1,5 @@
 # Variable Assignment
-tld=$(grep 'tld:' /vagrant/config.yaml | awk '{ print $2}')
+tld=$(grep 'tld:' /vagrant/config.yaml | awk '{print $2}')
 
 # Read the join token
 echo "Reading the join token"
