@@ -7,7 +7,7 @@ echo "Enabling HTTP Routing Mesh"
 curl -sk -H "Authorization: Bearer $token" \
   -H "Content-Type: application/json;charset=UTF-8" \
   -d '{
-      "HTTPPort": 8080,
+      "HTTPPort": 80,
       "HTTPSPort": 10443
     }', \
   "https://ucp.${tld}/api/hrm"
