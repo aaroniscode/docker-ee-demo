@@ -57,6 +57,11 @@ Vagrant.configure("2") do |config|
   config.vm.define "manager1" do |manager1|
     manager1.vm.hostname = "manager1.#{tld}"
 
+    manager1.vm.provider "virtualbox" do |vb|
+      # Give manager 4GB RAM
+      vb.memory = 3072
+    end
+
     manager1.vm.provision "trigger" do |trigger|
       trigger.fire do
         run "vagrant landrush set ucp.#{tld} manager1.#{tld}"
