@@ -7,42 +7,63 @@ password=$(grep 'password:' /vagrant/config.yaml | awk '{print $2}')
 
 # Create organizations
 echo "Populating DTR with sample organizations"
-/vagrant/scripts/dtr/create_organization.sh "it"
 /vagrant/scripts/dtr/create_organization.sh "dev"
 /vagrant/scripts/dtr/create_organization.sh "prod"
+/vagrant/scripts/dtr/create_organization.sh "secops"
 
 # Create teams
 echo "Populating DTR with sample teams"
-/vagrant/scripts/dtr/create_team.sh "it" "it"
 /vagrant/scripts/dtr/create_team.sh "dev" "dev"
 /vagrant/scripts/dtr/create_team.sh "prod" "prod"
+/vagrant/scripts/dtr/create_team.sh "secops" "secops"
 
 # Add April, Bob and Charlie to the dev team
-echo "Adding April, Bob and Charlie to the dev team"
-/vagrant/scripts/dtr/add_user_to_team.sh "dev" "dev" "april"
-/vagrant/scripts/dtr/add_user_to_team.sh "dev" "dev" "bob"
+echo "Adding Betty, Charlie and Dave to the dev team"
+/vagrant/scripts/dtr/add_user_to_team.sh "dev" "dev" "betty"
 /vagrant/scripts/dtr/add_user_to_team.sh "dev" "dev" "charlie"
+/vagrant/scripts/dtr/add_user_to_team.sh "dev" "dev" "dave"
+
+# Add Owen (Operations) to the prod and secops team
+echo "Adding Owen to the prod and SecOps team"
+/vagrant/scripts/dtr/add_user_to_team.sh "prod" "prod" "owen"
+/vagrant/scripts/dtr/add_user_to_team.sh "secops" "secops" "owen"
+
+# Add Sarah (Security) to the secops team
+echo "Adding Sarah to the SecOps team"
+/vagrant/scripts/dtr/add_user_to_team.sh "secops" "secops" "sarah"
 
 # Create repositories
 echo "Populating DTR with sample repositories"
-/vagrant/scripts/dtr/create_repo.sh "it" "nginx" "public" "IT approved NGINX"
-/vagrant/scripts/dtr/create_repo.sh "it" "node" "public" "IT approved Node.js"
+/vagrant/scripts/dtr/create_repo.sh "secops" "alpine" "public"
+/vagrant/scripts/dtr/create_repo.sh "secops" "nginx" "public"
 /vagrant/scripts/dtr/create_repo.sh "dev" "whalesay" "public"
-/vagrant/scripts/dtr/create_repo.sh "prod" "demo-flask-app" "public"
+/vagrant/scripts/dtr/create_repo.sh "dev" "nginx-hello-world" "public"
+/vagrant/scripts/dtr/create_repo.sh "prod" "flask-demo" "public"
 
 # Add team access to repositories
 echo "Adding team access to repositories"
-/vagrant/scripts/dtr/add_repo_to_team.sh "dev" "node-web-app" "dev" "read-write"
+/vagrant/scripts/dtr/add_repo_to_team.sh "secops" "alpine" "secops" "read-write"
+/vagrant/scripts/dtr/add_repo_to_team.sh "secops" "nginx" "secops" "read-write"
+/vagrant/scripts/dtr/add_repo_to_team.sh "dev" "whalesay" "dev" "read-write"
+/vagrant/scripts/dtr/add_repo_to_team.sh "dev" "nginx-hello-world" "dev" "read-write"
+/vagrant/scripts/dtr/add_repo_to_team.sh "prod" "flask-demo" "prod" "read-write"
 
 # Populate repositories with images
 echo "Loading images in DTR"
 docker login dtr.${tld} -u admin -p ${password}
+# Alpine
+docker pull alpine
+docker tag alpine dtr.${tld}/secops/alpine
+docker push dtr.${tld}/secops/alpine
+# Nginx
 docker pull nginx:alpine
-docker pull node:alpine
+docker tag nginx:alpine dtr.${tld}/secops/nginx
+docker push dtr.${tld}/secops/nginx
+# dev/whalesay
 docker pull dockeramiller/whalesay
-docker tag nginx:alpine dtr.${tld}/it/nginx
-docker tag node:alpine dtr.${tld}/it/node
 docker tag dockeramiller/whalesay dtr.${tld}/dev/whalesay
-docker push dtr.${tld}/it/nginx
-docker push dtr.${tld}/it/node
 docker push dtr.${tld}/dev/whalesay
+# prod/flask-demo
+docker pull dockeramiller/flask-demo
+docker tag dockeramiller/flask-demo dtr.${tld}/prod/flask-demo
+docker push dtr.${tld}/prod/flask-demo
