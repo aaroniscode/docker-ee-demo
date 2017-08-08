@@ -24,5 +24,8 @@ docker run --rm --name ucp \
 echo "Storing UCP's certificate"
 curl -sk https://ucp.${tld}/ca -o /vagrant/certs/ucp.crt
 
+# Get the auth token and save in config.yaml
+/vagrant/scripts/ucp/get_auth_token.sh
+
 # Get the swarm join tokens and save in config.yaml
 /vagrant/scripts/get_swarm_tokens.sh
