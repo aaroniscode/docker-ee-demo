@@ -52,9 +52,12 @@ echo "Adding team access to repositories"
 echo "Loading images in DTR"
 docker login dtr.${tld} -u admin -p ${password}
 # Alpine
-docker pull alpine
-docker tag alpine dtr.${tld}/secops/alpine
-docker push dtr.${tld}/secops/alpine
+docker pull alpine:3.5
+docker pull alpine:3.6
+docker tag alpine:3.5 dtr.${tld}/secops/alpine:3.5
+docker tag alpine:3.6 dtr.${tld}/secops/alpine:3.6
+docker push dtr.${tld}/secops/alpine:3.5
+docker push dtr.${tld}/secops/alpine:3.6
 # Nginx
 docker pull nginx:alpine
 docker tag nginx:alpine dtr.${tld}/secops/nginx
