@@ -28,4 +28,5 @@ curl -sk https://ucp.${tld}/ca -o /vagrant/certs/ucp.crt
 /vagrant/scripts/ucp/get_auth_token.sh
 
 # Get the swarm join tokens and save in config.yaml
+echo "Save swarm join tokens"
 /vagrant/scripts/get_swarm_tokens.sh
