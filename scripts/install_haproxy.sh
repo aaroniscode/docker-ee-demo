@@ -13,8 +13,14 @@ sudo sed -i 's/option\thttplog/# option httplog/' /etc/haproxy/haproxy.cfg
 echo "Updating HAProxy config part 2"
 sudo sed -i 's/mode\thttp/mode\ttcp/' /etc/haproxy/haproxy.cfg
 
-# Configure the frontend and backends
+# Set the tunnel timeout to 1 hr
+# Allows long running connections to containers
+# Was required for install of DTR 2.3.0 or a timeout occured
 echo "Updating HAProxy config part 3"
+sudo sed -i '/mode\ttcp/a\\ttimeout tunnel 1h' /etc/haproxy/haproxy.cfg
+
+# Configure the frontend and backends
+echo "Updating HAProxy config part 4"
 sudo cat << EOF >> /etc/haproxy/haproxy.cfg
 
 frontend global
@@ -35,6 +41,7 @@ backend dtr
 	mode tcp
 	server manager1 127.0.0.1:9443
 
+# TODO, not complete
 backend workers
   mode tcp
 	server worker1 127.0.0.1
