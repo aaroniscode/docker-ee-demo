@@ -22,6 +22,7 @@ ucp_version = yaml_config['ucp_version']
 
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-16.04"
+  #config.vm.box_version = "2.3.8"
 
   # Cache the apt packages for fast builds
   if Vagrant.has_plugin?("vagrant-cachier")
@@ -58,7 +59,7 @@ Vagrant.configure("2") do |config|
     manager1.vm.hostname = "manager1.#{tld}"
 
     manager1.vm.provider "virtualbox" do |vb|
-      # Give manager 4GB RAM
+      # Give manager 3GB RAM
       vb.memory = 3072
     end
 
