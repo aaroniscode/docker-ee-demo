@@ -33,8 +33,7 @@ Vagrant.configure("2") do |config|
     }
   end
 
-  # Network configuration
-  config.vm.network "private_network", type: "dhcp"
+  # Landrush (DNS) configuration
   config.landrush.enabled = true
   config.landrush.tld = tld
   config.landrush.guest_redirect_dns = false
@@ -57,6 +56,7 @@ Vagrant.configure("2") do |config|
   # Manager (UCP and DTR)
   config.vm.define "manager1" do |manager1|
     manager1.vm.hostname = "manager1.#{tld}"
+    manager1.vm.network "private_network", ip: "192.168.50.11"
 
     manager1.vm.provider "virtualbox" do |vb|
       # Give manager 3GB RAM
@@ -80,19 +80,22 @@ Vagrant.configure("2") do |config|
   end
 
   # Worker nodes
-  config.vm.define "worker1" do |worker1|
-    worker1.vm.hostname = "worker1.#{tld}"
-    worker1.vm.provision "shell", path: "scripts/join_swarm.sh"
+  config.vm.define "linux1" do |linux1|
+    linux1.vm.hostname = "linux1.#{tld}"
+    linux1.vm.network "private_network", ip: "192.168.50.12"
+    linux1.vm.provision "shell", path: "scripts/join_swarm.sh"
   end
 
-  config.vm.define "worker2" do |worker2|
-    worker2.vm.hostname = "worker2.#{tld}"
-    worker2.vm.provision "shell", path: "scripts/join_swarm.sh"
+  config.vm.define "linux2" do |linux2|
+    linux2.vm.hostname = "linux2.#{tld}"
+    linux2.vm.network "private_network", ip: "192.168.50.13"
+    linux2.vm.provision "shell", path: "scripts/join_swarm.sh"
   end
 
-  config.vm.define "worker3" do |worker3|
-    worker3.vm.hostname = "worker3.#{tld}"
-    worker3.vm.provision "shell", path: "scripts/join_swarm.sh"
+  config.vm.define "linux3" do |linux3|
+    linux3.vm.hostname = "linux3.#{tld}"
+    linux3.vm.network "private_network", ip: "192.168.50.14"
+    linux3.vm.provision "shell", path: "scripts/join_swarm.sh"
   end
 
 end
