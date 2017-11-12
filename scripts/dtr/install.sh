@@ -10,7 +10,7 @@ docker pull docker/dtr:${dtr_version}
 
 echo "Installing DTR"
 docker run --rm docker/dtr:${dtr_version} install \
-    --ucp-node manager1.${tld} \
+    --ucp-node manager1 \
     --replica-http-port 8080 \
     --replica-https-port 9443 \
     --ucp-insecure-tls \
