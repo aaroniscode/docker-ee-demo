@@ -22,7 +22,7 @@ ucp_version = yaml_config['ucp_version']
 
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-16.04"
-  #config.vm.box_version = "2.3.8"
+  #config.vm.box_version = "201710.25.0"
 
   # Cache the apt packages for fast builds
   if Vagrant.has_plugin?("vagrant-cachier")
