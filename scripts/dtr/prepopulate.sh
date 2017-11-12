@@ -62,6 +62,10 @@ docker push dtr.${tld}/secops/alpine:3.6
 docker pull nginx:alpine
 docker tag nginx:alpine dtr.${tld}/secops/nginx
 docker push dtr.${tld}/secops/nginx
+# dev/nginx-hello-world
+docker pull dockeramiller/nginx-hello-world
+docker tag dockeramiller/nginx-hello-world dtr.${tld}/dev/nginx-hello-world
+docker push dtr.${tld}/dev/nginx-hello-world
 # dev/whalesay
 docker pull dockeramiller/whalesay
 docker tag dockeramiller/whalesay dtr.${tld}/dev/whalesay
